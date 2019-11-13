@@ -70,6 +70,15 @@
  * --Copyright--
  */
 
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+#include <stdio_ext.h>
+#include <ctype.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <net/if.h>
+#include <netdb.h>
 #include "nss_vrfdns.h"
 
 #define RFC1535 1
@@ -81,6 +90,9 @@
 #endif
 
 int __vrf_res_vinit(res_state statp, int preinit, char *resconf_path);
+static const char sort_mask_chars[] = "/&";
+#define ISSORTMASK(ch) (strchr(sort_mask_chars, ch) != NULL)
+static u_int32_t net_mask (struct in_addr);
 
 unsigned long long int __res_initstamp;
 
@@ -190,6 +202,18 @@ res_setoptions(res_state statp, const char *options, const char *source) {
 		while (*cp && *cp != ' ' && *cp != '\t')
 			cp++;
 	}
+}
+
+static u_int32_t
+net_mask (struct in_addr in)
+{
+        u_int32_t i = ntohl(in.s_addr);
+
+        if (IN_CLASSA(i))
+                return (htonl(IN_CLASSA_NET));
+        else if (IN_CLASSB(i))
+                return (htonl(IN_CLASSB_NET));
+        return (htonl(IN_CLASSC_NET));
 }
 
 int

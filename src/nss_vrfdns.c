@@ -70,15 +70,32 @@
  * --Copyright--
  */
 
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+#include <nss.h>
+#include <resolv.h>
 #include "nss_vrfdns.h"
 
-static const char AskedForGot[] =
-			  "gethostby*.getanswer: asked for \"%s\", got \"%s\"";
-static char hostbuf[8*1024];
-static char *h_addr_ptrs[MAXADDRS + 1];
-static char *host_aliases[MAXALIASES];
-static struct hostent host;
+struct hostent;
+
+extern enum nss_status _nss_dns_gethostbyname_r (const char *name, struct hostent *result,
+						 char *buffer, size_t buflen, int *errnop,
+						 int *h_errnop);
+
+extern enum nss_status _nss_dns_gethostbyname3_r (const char *name, int af,
+                                                  struct hostent *result,
+                                                  char *buffer, size_t buflen,
+                                                  int *errnop, int *h_errnop,
+                                                  int32_t *ttlp, char **canonp);
+
+extern enum nss_status _nss_dns_gethostbyaddr2_r (const void *addr,
+                                                  socklen_t len, int af,
+                                                  struct hostent *result,
+                                                  char *buffer, size_t buflen,
+                                                  int *errnop, int *h_errnop,
+                                                  int32_t *ttlp);
 
 enum nss_status
 _nss_vrfdns_gethostbyname2_r (const char *name, int af, struct hostent *result,
@@ -142,15 +159,6 @@ _nss_vrfdns_gethostbyname_r (const char *name, struct hostent *result,
 }
 
 enum nss_status
-_nss_vrfdns_gethostbyaddr2_r (const void *addr, socklen_t len, int af,
-			   struct hostent *result, char *buffer, size_t buflen,
-			   int *errnop, int *h_errnop, int32_t *ttlp)
-{
-    return _nss_vrfdns_gethostbyaddr_r (addr, len, af, result, buffer,
-                                           buflen, errnop, h_errnop);
-}
-
-enum nss_status
 _nss_vrfdns_gethostbyaddr_r (const void *addr, socklen_t len, int af,
 			  struct hostent *result, char *buffer, size_t buflen,
 			  int *errnop, int *h_errnop)
@@ -172,4 +180,13 @@ _nss_vrfdns_gethostbyaddr_r (const void *addr, socklen_t len, int af,
 
   return _nss_dns_gethostbyaddr2_r (addr, len, af, result, buffer, buflen,
         				    errnop, h_errnop, NULL);
+}
+
+enum nss_status
+_nss_vrfdns_gethostbyaddr2_r (const void *addr, socklen_t len, int af,
+			   struct hostent *result, char *buffer, size_t buflen,
+			   int *errnop, int *h_errnop, int32_t *ttlp)
+{
+    return _nss_vrfdns_gethostbyaddr_r (addr, len, af, result, buffer,
+                                           buflen, errnop, h_errnop);
 }

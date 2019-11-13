@@ -3,6 +3,8 @@
  * All rights reserved.
  */
 
+#include <stdlib.h>
+#include <string.h>
 #include "nss_vrfdns.h"
 
 char * get_vrfname(void)

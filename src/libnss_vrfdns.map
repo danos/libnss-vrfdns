@@ -3,7 +3,7 @@ NSS_VRFDNS_PRIVATE_2.0 {
     _nss_vrfdns_gethostbyname_r;
     _nss_vrfdns_gethostbyname2_r;
     _nss_vrfdns_gethostbyaddr_r;
-    _nss_vrfdns_gethostbyaddr2;
+    _nss_vrfdns_gethostbyaddr2_r;
   local:
     *;
 };

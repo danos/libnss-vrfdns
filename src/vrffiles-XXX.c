@@ -27,7 +27,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
-
+#include <nss.h>
 #include "nss_vrfdns.h"
 
 #if defined O_CLOEXEC && !defined __ASSUME_O_CLOEXEC

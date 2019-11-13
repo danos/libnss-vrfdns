@@ -23,11 +23,14 @@
  * Brocade Communications Systems 2016
  */
 
+#include <string.h>
+#include <strings.h>
+#include <stdbool.h>
 #include <assert.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <arpa/nameser.h>
 #include <netdb.h>
+#include <nss.h>
 #include <resolv.h>
 
 /* Get implementation for some internal functions.  */
@@ -52,8 +55,6 @@ struct hostent_data
 #define TRAILING_LIST_SEPARATOR_P       isspace
 
 #include "vrffiles-parse.c"
-
-extern int vrffiles_hook();
 
 LINE_PARSER
 ("#",
@@ -371,9 +372,9 @@ _nss_vrffiles_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 				break;
 
 			int naliases = 0;
-			if (__strcasecmp (name, result.h_name) != 0) {
+			if (strcasecmp (name, result.h_name) != 0) {
 				for (; result.h_aliases[naliases] != NULL; ++naliases)
-					if (! __strcasecmp (name, result.h_aliases[naliases]))
+					if (! strcasecmp (name, result.h_aliases[naliases]))
 						break;
 				if (result.h_aliases[naliases] == NULL)
 					continue;
