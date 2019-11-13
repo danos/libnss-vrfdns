@@ -1,0 +1,9 @@
+NSS_VRFDNS_PRIVATE_2.0 {
+  global:
+    _nss_vrfdns_gethostbyname_r;
+    _nss_vrfdns_gethostbyname2_r;
+    _nss_vrfdns_gethostbyaddr_r;
+    _nss_vrfdns_gethostbyaddr2;
+  local:
+    *;
+};

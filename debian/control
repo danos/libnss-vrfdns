@@ -1,0 +1,13 @@
+Source: libnss-vrfdns
+Section: net
+Priority: optional
+Maintainer: Vyatta Package Maintainers <DL-vyatta-help@att.com>
+Standards-Version: 3.9.6
+Build-Depends: debhelper (>= 9), debhelper (>= 9.20160403~) | dh-autoreconf, pkg-config, autoconf-archive
+
+Package: libnss-vrfdns
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Breaks: chvrf (<= 1.9)
+Description: Glibc nss vrf resolver
+ Vrf aware dns resolver

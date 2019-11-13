@@ -1,0 +1,42 @@
+#!/bin/sh
+set -e
+
+#DEBHELPER#
+
+# This code was taken from libnss-myhostname, which got it from nss-mdns:
+
+log() {
+    echo "$*"
+}
+
+remove_nss_entry() {
+    log "Checking NSS setup..."
+    # abort if /etc/nsswitch.conf does not exist
+    if ! [ -e /etc/nsswitch.conf ]; then
+        log "Could not find /etc/nsswitch.conf."
+        return 0
+    fi
+
+    # skip if modules are not even installed
+    grep -Eq '^hosts:.*vrffiles vrfdns' /etc/nsswitch.conf || return 0
+
+    # replace hosts line with RD specific NSS modules
+    RECOVERED_CONF=$( grep -E '^hosts:' /etc/nsswitch.conf.libnss-vrfdns | sed 's/^hosts:\s*\(.*\)/\1/g' )
+    sed -i "s/vrffiles vrfdns/$RECOVERED_CONF/g" /etc/nsswitch.conf
+    rm /etc/nsswitch.conf.libnss-vrfdns
+}
+
+case "$1" in
+    remove|purge)
+        if [ "${DPKG_MAINTSCRIPT_PACKAGE_REFCOUNT:-1}" = 1 ]; then
+            remove_nss_entry
+        fi
+    ;;
+    upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+    ;;
+
+    *)
+        echo "postrm called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac

@@ -1,0 +1,4 @@
+AUTOMAKE_OPTIONS = dist-bzip2
+CLEANFILES = *~
+
+SUBDIRS = src
