@@ -147,12 +147,8 @@ _nss_vrfdns_gethostbyname_r (const char *name, struct hostent *result,
     if(vrfname)
         free(vrfname);
 
-    if (_res.options & RES_USE_INET6)
-        status = _nss_dns_gethostbyname3_r (name, AF_INET6, result, buffer,
-                                            buflen, errnop, h_errnop, NULL, NULL);
-    if (status == NSS_STATUS_NOTFOUND)
-        status = _nss_dns_gethostbyname3_r (name, AF_INET, result, buffer,
-                                            buflen, errnop, h_errnop, NULL, NULL);
+    status = _nss_dns_gethostbyname3_r (name, AF_INET, result, buffer,
+                                        buflen, errnop, h_errnop, NULL, NULL);
 
     return status;
   }

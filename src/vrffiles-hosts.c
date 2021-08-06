@@ -106,9 +106,7 @@ LINE_PARSER
 	STRING_FIELD (result->h_name, isspace, 1);
  })
 
-#define EXTRA_ARGS_VALUE \
-	, ((_res.options & RES_USE_INET6) ? AF_INET6 : AF_INET),                    \
-	((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0)
+#define EXTRA_ARGS_VALUE , (AF_INET), (0)
 #include "vrffiles-XXX.c"
 #undef EXTRA_ARGS_VALUE
 
@@ -139,9 +137,7 @@ _nss_vrffiles_gethostbyname3_r (const char *name, int af, struct hostent *result
 	   enum nss_status status = internal_setent (keep_stream);
 
 	if (status == NSS_STATUS_SUCCESS) {
-		/* XXX Is using _res to determine whether we want to convert IPv4
-		   addresses to IPv6 addresses really the right thing to do?  */
-		int flags = ((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0);
+		int flags = 0;
 
 		/* Tell getent function that we have repositioned the file pointer.  */
 		last_use = getby;
@@ -325,9 +321,7 @@ _nss_vrffiles_gethostbyname_r (const char *name, struct hostent *result,
 				char *buffer, size_t buflen, int *errnop,
 				int *herrnop)
 {
-	int af = ((_res.options & RES_USE_INET6) ? AF_INET6 : AF_INET);
-
-	return _nss_vrffiles_gethostbyname3_r (name, af, result, buffer, buflen,
+	return _nss_vrffiles_gethostbyname3_r (name, AF_INET, result, buffer, buflen,
 					errnop, herrnop, NULL, NULL);
 }
 
