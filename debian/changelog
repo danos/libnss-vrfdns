@@ -1,3 +1,9 @@
+libnss-vrfdns (0.11) unstable; urgency=medium
+
+  * RES_USE_INET6 got removed in glibc 2.30
+
+ -- Daniel Gollub <dgollub@att.com>  Tue, 17 Aug 2021 11:25:32 +0200
+
 libnss-vrfdns (0.10) unstable; urgency=medium
 
   * DANOS Import Master
